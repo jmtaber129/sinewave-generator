@@ -17,16 +17,17 @@ void Configuration::ConfigureClocks() {
   // Note: If you modify clock speeds or sources, you need to change the timer
   // configuration methods, too.
   WDTCTL = WDTPW + WDTHOLD;  // Stop WDT.
-  DCOCTL = CALDCO_16MHZ;
-  BCSCTL1 = CALBC1_16MHZ;  // Set DCO.
+  DCOCTL = CALDCO_16MHZ;     // Set DCO.
+  BCSCTL1 = CALBC1_16MHZ;
 }
 
 void Configuration::ConfigurePorts() {
-  P2DIR |= 0xFF; // All P2.x outputs.
-  P2OUT &= 0x00; // All P2.x reset.
-  P1DIR |= 0;
+  P2DIR |= 0xFF;  // All P2.x outputs.
+  P2OUT &= 0x00;  // All P2.x reset.
+  P1DIR = BIT7 + BIT6 + BIT5 + BIT4;  // DAC inputs.
   P1IFG = 0;
   P1OUT &= 0x00;
+  // TODO(jmtaber129): Add additional settings for input PB.
 }
 
 void Configuration::ConfigureTimer() {
