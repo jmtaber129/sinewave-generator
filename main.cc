@@ -20,6 +20,8 @@ __interrupt void Timer_A (void) {
   }
   current_timer_count = 0;
 
+  int tmp = SineLutGenerator::Next();
+
   P1OUT ^= DEBUG_LED;
 
   return;
