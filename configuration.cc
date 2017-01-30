@@ -31,8 +31,10 @@ void Configuration::ConfigurePorts() {
 }
 
 void Configuration::ConfigureTimer() {
-  // Configure timer for 360Hz.
-  TA1CCR0 = 8;  // Generate an interrupt every 0.2778ms.
+  // Configure timer for approx. 132231Hz.  Assuming 200 samples per sinewave
+  // period, this allows a 220Hz wave by incrementing samples every 3 timer
+  // interrupts, and a 330Hz wave by incrementing every 2 interrupts.
+  TA1CCR0 = 121;  // Generate an interrupt every 7.56us.
   TA1CCTL0 = CCIE;
-  TA1CTL = TASSEL_1 + ID_0 + MC_1;
+  TA1CTL = TASSEL_2 + ID_0 + MC_1;
 }
