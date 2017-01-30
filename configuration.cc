@@ -25,6 +25,7 @@ void Configuration::ConfigurePorts() {
   P2DIR |= 0xFF;  // All P2.x outputs.
   P2OUT &= 0x00;  // All P2.x reset.
   P1DIR = BIT7 + BIT6 + BIT5 + BIT4;  // DAC inputs.
+  P1DIR |= DEBUG_LED;
   P1IFG = 0;
   P1OUT &= 0x00;
   // TODO(jmtaber129): Add additional settings for input PB.
