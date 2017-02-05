@@ -2,8 +2,7 @@
 
 #include <msp430g2553.h>
 
-// TODO(jmtaber129): Change the register values to the values needed for this
-// application.
+#define PB BIT3
 
 void Configuration::Init() {
   ConfigureClocks();
@@ -26,8 +25,11 @@ void Configuration::ConfigurePorts() {
   P2OUT &= 0x00;  // All P2.x reset.
   P1DIR = BIT7 + BIT6 + BIT5 + BIT4;  // DAC inputs.
   P1DIR |= DEBUG_LED;
-  P1IFG = 0;
-  P1OUT &= 0x00;
+  P1OUT = PB;   // Pullup for PB.
+  P1REN |= PB;  // Resistor enable for PB.
+  //P1IE |= PB;   // Enable interrupts for PB.
+  //P1IES |= PB;  // Hi-to-Low edge for PB (active low).
+  P1IFG &= ~0xFF;
   // TODO(jmtaber129): Add additional settings for input PB.
 }
 
