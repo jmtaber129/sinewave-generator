@@ -3,8 +3,8 @@
 
 #define PB_INPUT BIT3
 #define DEBUG_LED BIT0
-#define DESIRED_COUNT_330HZ 2
-#define DESIRED_COUNT_220HZ 3
+#define DESIRED_COUNT_330HZ 230
+#define DESIRED_COUNT_220HZ 345
 
 class Configuration {
   public:

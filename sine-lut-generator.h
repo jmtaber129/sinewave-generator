@@ -3,6 +3,7 @@
 
 class SineLutGenerator {
   public:
+    // Returns the next entry in the LUT.
     static int Next();
   private:
     static const int kLutSize = 200;

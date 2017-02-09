@@ -5,9 +5,7 @@
 
 #define MAP_BIT(num, in_bit, out_bit) (((num & in_bit) != 0) ? out_bit : 0)
 
-int current_timer_count = 0;
 volatile int desired_timer_count = DESIRED_COUNT_220HZ;
-//volatile int desired_timer_count = 44;
 
 volatile bool pb_state = 1;
 volatile int debounce_count = 0;
@@ -19,36 +17,18 @@ int main(void) {
   return 0;
 }
 
-//#pragma vector=PORT1_VECTOR
-/*__interrupt*/ void Port_1 (void) {
-  if (P1IN & BIT3) {
-    if (desired_timer_count == DESIRED_COUNT_220HZ) {
-        desired_timer_count = DESIRED_COUNT_330HZ;
-      } else {
-        desired_timer_count = DESIRED_COUNT_220HZ;
-      }
-  }
-  //P1IFG &= ~0xFF;
-}
-
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void Timer_A (void) {
-  if (debounce_count != 0) {  // If we've waited for the bounce to pass.
-    if (pb_state != ((P1IN & BIT3) >> 3)) {
-      pb_state = !pb_state;
-      P1OUT ^= DEBUG_LED;
-      Port_1();
-      debounce_count = kDebounceReset;
+  if (pb_state != ((P1IN & BIT3) >> 3)) {
+    pb_state = !pb_state;
+    if (P1IN & BIT3) {
+      if (TA1CCR0 == DESIRED_COUNT_220HZ) {
+          TA1CCR0 = DESIRED_COUNT_330HZ;
+        } else {
+          TA1CCR0 = DESIRED_COUNT_220HZ;
+        }
     }
-  } else {
-    // If we're still waiting for the bounce to pass, decrement the bounce
-    // counter.
-    --debounce_count;
   }
-  if (++current_timer_count < desired_timer_count) {
-    return;
-  }
-  current_timer_count = 0;
 
   int next = SineLutGenerator::Next();
 
@@ -57,7 +37,6 @@ __interrupt void Timer_A (void) {
           MAP_BIT(next, BIT1, BIT6) +
           MAP_BIT(next, BIT0, BIT7);
 
-  //P1OUT |= DEBUG_LED & ((next & BIT9) != 0);
   P1OUT |= BIT3;
 
   P2OUT = MAP_BIT(next, BIT7, BIT0) +
@@ -66,8 +45,6 @@ __interrupt void Timer_A (void) {
           MAP_BIT(next, BIT4, BIT3) +
           MAP_BIT(next, BIT3, BIT4) +
           MAP_BIT(next, BIT2, BIT5);
-
-  //P1OUT ^= DEBUG_LED;
 
   return;
 }
